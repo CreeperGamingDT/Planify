@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Planify - Smart Task Scheduler</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body class="page-generate">
+
+<header>
+  <div class="logo">Planify</div>
+  <div class="tagline">Intelligent task scheduling</div>
+</header>
+
+<main>
+  <!-- ── Sidebar ── -->
+  <aside class="sidebar">
+
+    <div class="field-group">
+      <div class="section-label">Your Goal</div>
+      <label for="objective">Objective</label>
+      <input type="text" id="objective" class="obj-input" placeholder="e.g. Learn Spanish conversational basics…" />
+    </div>
+
+    <div class="field-group">
+      <div class="section-label">Notes & Context</div>
+      <label>Upload a document <em style="font-weight:300;color:var(--ink-muted)">(optional)</em></label>
+      <div class="drop-zone" id="dropZone">
+        <input type="file" id="fileInput" accept=".txt,.md,.doc,.docx" />
+        <span class="dz-icon">📄</span>
+        <div class="dz-text"><strong>Drop a file</strong> or click to browse<br>.txt · .md · .doc · .docx</div>
+        <div class="file-name" id="fileName"></div>
+      </div>
+      <div class="divider">or type notes</div>
+      <textarea id="notes" placeholder="Paste any notes, topics, or details here. The AI will use these to build your schedule…"></textarea>
+    </div>
+
+    <div class="field-group">
+      <div class="section-label">Timeframe</div>
+      <div class="date-row">
+        <div>
+          <label for="startDate">Start date</label>
+          <input type="date" id="startDate" />
+        </div>
+        <div>
+          <label for="endDate">End date</label>
+          <input type="date" id="endDate" />
+        </div>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <div class="section-label">Daily Time</div>
+      <div class="time-row">
+        <div>
+          <label for="hoursPerDay">Hours / day</label>
+          <div class="unit-input">
+            <input type="number" id="hoursPerDay" min="0" max="12" value="1" />
+            <span class="unit">hrs</span>
+          </div>
+        </div>
+        <div>
+          <label for="minutesPerDay">Minutes</label>
+          <div class="unit-input">
+            <input type="number" id="minutesPerDay" min="0" max="59" value="30" />
+            <span class="unit">min</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="error-banner" id="errorBanner"></div>
+
+    <button class="btn-generate" id="generateBtn" onclick="generateSchedule()">
+      <div class="spinner"></div>
+      <span class="btn-arrow">✦</span>
+      <span id="btnText">Generate Schedule</span>
+    </button>
+
+  </aside>
+
+    <!-- Output Panel -->
+  <section class="calendar-panel info-panel">
+    <div class="panel-header">
+      <div>
+        <div class="panel-title">Schedule Output</div>
+        <div class="panel-subtitle">You will be redirected after generating a plan</div>
+      </div>
+      <a class="btn-print" href="schedule.html">View schedules</a>
+    </div>
+
+    <div class="empty-state">
+      <div class="empty-graphic">
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <div class="empty-title">Generate a schedule</div>
+      <div class="empty-desc">Once created, you can manage it in your schedules list.</div>
+    </div>
+  </section>
+</main>
+
+<script src="js/utils.js"></script>
+<script src="js/init-dates.js"></script>
+<script src="js/file-handling.js"></script>
+<script src="js/errors.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/schedule.js"></script>
+</body>
+</html>
+
+
+
