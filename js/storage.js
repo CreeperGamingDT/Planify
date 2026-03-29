@@ -7,6 +7,10 @@ function createScheduleId() {
   return `sched_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
 }
 
+function createTaskId() {
+  return createScheduleId();
+}
+
 function loadSchedules() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);

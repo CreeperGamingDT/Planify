@@ -2,7 +2,7 @@ async function generateSchedule() {
   const objective = document.getElementById('objective').value.trim();
   const notes = document.getElementById('notes').value.trim();
   const startDate = document.getElementById('startDate').value;
-  const endDate = document.getElementById('endDate').value;
+  const finishDays = parseInt(document.getElementById('finishDays').value) || 0;
   const hours = parseInt(document.getElementById('hoursPerDay').value) || 0;
   const minutes = parseInt(document.getElementById('minutesPerDay').value) || 0;
 
@@ -10,12 +10,12 @@ async function generateSchedule() {
     showError('Please enter an objective.');
     return;
   }
-  if (!startDate || !endDate) {
-    showError('Please select a start and end date.');
+  if (!startDate) {
+    showError('Please select a start date.');
     return;
   }
-  if (new Date(endDate) < new Date(startDate)) {
-    showError('End date must be after start date.');
+  if (finishDays <= 0) {
+    showError('Please enter how many days to finish.');
     return;
   }
   if (hours === 0 && minutes === 0) {
@@ -25,14 +25,16 @@ async function generateSchedule() {
 
   const btn = document.getElementById('generateBtn');
   btn.classList.add('loading');
-  document.getElementById('btnText').textContent = 'Generatingâ€¦';
+  document.getElementById('btnText').textContent = 'Generating...';
 
   const contextNotes = [notes, fileText].filter(Boolean).join('\n\n');
   const totalMinutes = hours * 60 + minutes;
 
   // Count working days
   const start = new Date(startDate);
-  const end = new Date(endDate);
+  const end = new Date(start);
+  end.setDate(start.getDate() + finishDays - 1);
+  const endDate = fmtDate(end);
   const days = [];
   let cur = new Date(start);
   while (cur <= end) {
@@ -40,58 +42,55 @@ async function generateSchedule() {
     cur.setDate(cur.getDate() + 1);
   }
 
-  const prompt = `You are a productivity planner. The user has the following objective:
-
-"${objective}"
-
-${contextNotes ? 'Notes and context:\n' + contextNotes : ''}
-
-Timeframe: ${startDate} to ${endDate} (${days.length} days)
-Available time per day: ${hours}h ${minutes}min (${totalMinutes} minutes)
-
-Create a practical, actionable daily schedule. Break the objective into specific tasks distributed logically across the days. Each day can have 1â€“4 tasks. Tasks should be concrete and completable within the day's time budget.
-
-Respond ONLY with valid JSON (no markdown, no explanation) in this exact format:
-{
-  "title": "Short schedule title",
-  "tasks": [
-    { "date": "YYYY-MM-DD", "task": "Task description", "duration": 30 }
-  ]
-}
-
-Rules:
-- Only include dates from ${startDate} to ${endDate}
-- duration is in minutes, realistic for the task
-- Total duration per day should not exceed ${totalMinutes} minutes
-- Tasks should build progressively toward the objective
-- Be specific and actionable`;
 
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch('/api/planifyai/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 2000,
-        messages: [{ role: 'user', content: prompt }]
+          objective,
+          contextNotes,
+          startDate,
+          endDate,
+          finishDays,
+          totalMinutes,
+          for:"Calender",
       })
     });
+    console.log(response)
+    if (!response.ok) {
+      const errText = await response.text();
+      throw new Error(errText || `Request failed (${response.status})`);
+    }
     const data = await response.json();
-    const raw = data.content.map(b => b.text || '').join('');
+    const raw = typeof data === 'string' ? data : (data.content ?? JSON.stringify(data));
     const clean = raw.replace(/```json|```/g, '').trim();
     const parsed = JSON.parse(clean);
+    const rawTasks = Array.isArray(parsed.tasks) ? parsed.tasks : [];
+    const tasks = rawTasks.map(t => ({
+      id: t.id || createTaskId(),
+      date: t.date,
+      task: t.task,
+      duration: t.duration,
+      notes:t.notes
+    }));
+
     const schedule = {
       id: createScheduleId(),
       title: (parsed.title || objective || 'Untitled Schedule').trim(),
-      tasks: Array.isArray(parsed.tasks) ? parsed.tasks : [],
+      tasks,
       startDate,
       endDate,
+      finishDays,
       totalMinutes,
       days,
+      objective,
+      notes: contextNotes,
+      rawResponse: raw,
       createdAt: new Date().toISOString()
     };
     addSchedule(schedule);
-    window.location.href = `schedule.html?id=${encodeURIComponent(schedule.id)}`;
+    window.location.href = `index.html?id=${encodeURIComponent(schedule.id)}`;
   } catch (err) {
     showError('Failed to generate schedule. Please try again.');
     console.error(err);

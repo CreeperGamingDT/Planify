@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Planify - Task Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body class="page-task">
+
+<header>
+  <div class="header-left">
+    <div class="logo">Planify</div>
+    <div class="tagline">Viewing Task</div>
+  </div>
+  <div class="header-right">
+    <details class="settings-menu">
+      <summary class="btn-print settings-btn">Settings</summary>
+      <div class="settings-panel">
+        <label class="toggle-row">
+          <span>Dark mode</span>
+          <span class="toggle">
+            <input type="checkbox" id="darkModeToggle" />
+            <span class="switch"></span>
+          </span>
+        </label>
+      </div>
+    </details>
+  </div>
+</header>
+
+<main>
+  <section class="calendar-panel task-panel">
+    <div class="panel-header">
+      <div>
+        <div class="panel-title">Task</div>
+        <div class="panel-subtitle" id="taskSubtitle">Details</div>
+      </div>
+    <a class="btn-print" id="backToScheduleBtn" href="index.html">Back to schedules</a>
+    </div>
+
+    <div class="task-meta">
+      <div class="task-title" id="taskTitle">Loading...</div>
+      <div class="task-duration-badge" id="taskDuration"></div>
+    </div>
+
+    <div class="task-notes">
+      <div class="section-label">Notes</div>
+      <div class="notes-box" id="taskNotes"></div>
+    </div>
+  </section>
+
+  <section class="calendar-panel guide-panel">
+    <div class="panel-header">
+      <div>
+        <div class="panel-title">Step-by-step guide</div>
+        <div class="panel-subtitle" id="guideStatus">Generating guide...</div>
+      </div>
+    </div>
+
+    <div class="error-banner" id="guideError" style="display:none"></div>
+    <div class="guide-output" id="guideOutput"></div>
+    <button class="btn-generate btn-submit task-complete-btn" id="taskCompleteBtn" type="button">Mark Task Complete</button>
+  </section>
+</main>
+
+<script src="js/utils.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/task-view.js"></script>
+<script src="js/debug.js"></script>
+</body>
+</html>

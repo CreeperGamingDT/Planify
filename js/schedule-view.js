@@ -9,12 +9,23 @@ function formatRange(startDate, endDate) {
 function renderList() {
   const listEl = document.getElementById('scheduleList');
   const emptyEl = document.getElementById('listEmpty');
+  const emptyState = document.getElementById('emptyState');
+  const scheduleView = document.getElementById('scheduleView');
   const schedules = loadSchedules();
+  const isMobile = window.matchMedia && window.matchMedia('(max-width: 860px)').matches;
+  const hasSchedules = schedules.length > 0;
 
   listEl.innerHTML = '';
 
-  if (schedules.length === 0) {
+  if (scheduleView) {
+    scheduleView.style.display = !hasSchedules && isMobile ? 'none' : 'block';
+  }
+
+  if (!hasSchedules) {
     emptyEl.style.display = 'flex';
+    if (emptyState) {
+      emptyState.style.display = 'flex';
+    }
     return;
   }
 
@@ -23,6 +34,7 @@ function renderList() {
   schedules.forEach(schedule => {
     const card = document.createElement('div');
     card.className = 'schedule-card';
+    card.dataset.scheduleId = schedule.id;
     if (schedule.id === currentScheduleId) card.classList.add('active');
 
     const tasks = Array.isArray(schedule.tasks) ? schedule.tasks : [];
@@ -79,6 +91,13 @@ function renderList() {
       renderSchedule(schedule);
     });
 
+    card.addEventListener('contextmenu', event => {
+      event.preventDefault();
+      event.stopPropagation();
+      closeAllMenus();
+      menu.classList.add('open');
+    });
+
     menuBtn.addEventListener('click', event => {
       event.stopPropagation();
       closeAllMenus();
@@ -120,25 +139,57 @@ function renderList() {
 
 function renderSchedule(schedule) {
   currentScheduleId = schedule.id;
-  const tasks = Array.isArray(schedule.tasks) ? schedule.tasks : [];
+  window.currentScheduleId = schedule.id;
+  document.body.classList.add('schedule-open');
+  let tasks = Array.isArray(schedule.tasks) ? schedule.tasks : [];
+  let updated = false;
+  tasks = tasks.map(t => {
+    if (!t.id) {
+      updated = true;
+      return { ...t, id: createTaskId() };
+    }
+    return t;
+  });
+  if (updated) {
+    updateSchedule(schedule.id, { tasks });
+  }
+
   const data = { title: schedule.title, tasks };
   const days =
     Array.isArray(schedule.days) && schedule.days.length
       ? schedule.days
       : buildDays(schedule.startDate, schedule.endDate);
   const totalMinutes = schedule.totalMinutes || 0;
-  renderCalendar(data, schedule.startDate, schedule.endDate, days, totalMinutes);
+  renderCalendar(data, schedule.startDate, schedule.endDate, days, totalMinutes, schedule.id);
   const backBtn = document.getElementById('backToListBtn');
   if (backBtn) backBtn.style.display = 'inline-block';
+
+  const allDoneWrap = document.getElementById('allDoneWrap');
+  if (allDoneWrap) {
+    const allDone = tasks.length > 0 && tasks.every(t => t.completed);
+    allDoneWrap.style.display = allDone ? 'flex' : 'none';
+  }
+
   renderList();
+
+  const isMobile = window.matchMedia && window.matchMedia('(max-width: 860px)').matches;
+  if (isMobile) {
+    requestAnimationFrame(() => {
+      const panel = document.getElementById('scheduleView');
+      if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
 }
 
 function clearScheduleView() {
   currentScheduleId = null;
+  window.currentScheduleId = null;
+  document.body.classList.remove('schedule-open');
   const emptyState = document.getElementById('emptyState');
   const calendarOutput = document.getElementById('calendarOutput');
   const printBtn = document.getElementById('printBtn');
   const backBtn = document.getElementById('backToListBtn');
+  const allDoneWrap = document.getElementById('allDoneWrap');
 
   if (calendarOutput) {
     calendarOutput.style.display = 'none';
@@ -147,6 +198,7 @@ function clearScheduleView() {
   if (emptyState) emptyState.style.display = 'flex';
   if (printBtn) printBtn.style.display = 'none';
   if (backBtn) backBtn.style.display = 'none';
+  if (allDoneWrap) allDoneWrap.style.display = 'none';
 
   const titleEl = document.getElementById('panelTitle');
   const subtitleEl = document.getElementById('panelSubtitle');
@@ -182,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const schedule = getSchedule(id);
     if (schedule) {
       renderSchedule(schedule);
-      history.replaceState(null, '', 'schedule.html');
+      history.replaceState(null, '', 'index.html');
     }
   }
 
@@ -192,5 +244,14 @@ document.addEventListener('DOMContentLoaded', () => {
       clearScheduleView();
     });
   }
-});
 
+  const allDoneBtn = document.getElementById('allDoneBtn');
+  if (allDoneBtn) {
+    allDoneBtn.addEventListener('click', () => {
+      const scheduleId = currentScheduleId;
+      if (!scheduleId) return;
+      deleteSchedule(scheduleId);
+      window.location.href = 'index.html';
+    });
+  }
+});
