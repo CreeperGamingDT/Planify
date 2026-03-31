@@ -163,7 +163,7 @@ async function loadTaskGuide() {
     return;
   }
 
-  if (backBtn) backBtn.href = `index.html?id=${encodeURIComponent(scheduleId)}`;
+  if (backBtn) backBtn.href = `${window.PAGES.schedules}?id=${encodeURIComponent(scheduleId)}`;
 
   const tasks = Array.isArray(schedule.tasks) ? schedule.tasks : [];
   const taskIndex = tasks.findIndex(t => t.id === taskId);
@@ -195,7 +195,7 @@ async function loadTaskGuide() {
         : updatedTasks;
 
       updateSchedule(schedule.id, { tasks: finalTasks });
-      window.location.href = `index.html?id=${encodeURIComponent(scheduleId)}`;
+      window.location.href = `${window.PAGES.schedules}?id=${encodeURIComponent(scheduleId)}`;
     });
   }
 

@@ -234,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const schedule = getSchedule(id);
     if (schedule) {
       renderSchedule(schedule);
-      history.replaceState(null, '', 'index.html');
+      history.replaceState(null, '', window.PAGES.schedules);
     }
   }
 
@@ -251,7 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const scheduleId = currentScheduleId;
       if (!scheduleId) return;
       deleteSchedule(scheduleId);
-      window.location.href = 'index.html';
+      window.location.href = window.PAGES.schedules;
     });
   }
 });

@@ -90,7 +90,7 @@ async function generateSchedule() {
       createdAt: new Date().toISOString()
     };
     addSchedule(schedule);
-    window.location.href = `index.html?id=${encodeURIComponent(schedule.id)}`;
+    window.location.href = `${window.PAGES.schedules}?id=${encodeURIComponent(schedule.id)}`;
   } catch (err) {
     showError('Failed to generate schedule. Please try again.');
     console.error(err);

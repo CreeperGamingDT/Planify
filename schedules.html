@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Planify - Schedules</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body class="page-schedule">
+
+<header>
+  <div class="header-left">
+    <a class="logo" href="index.html">Planify</a>
+    <div class="tagline">Viewing Schedules</div>
+  </div>
+  <div class="header-right">
+    <details class="settings-menu">
+      <summary class="btn-print settings-btn">Settings</summary>
+      <div class="settings-panel">
+        <label class="toggle-row">
+          <span>Dark mode</span>
+          <span class="toggle">
+            <input type="checkbox" id="darkModeToggle" />
+            <span class="switch"></span>
+          </span>
+        </label>
+      </div>
+    </details>
+  </div>
+</header>
+
+<main>
+  <aside class="schedule-list-panel">
+    <div class="panel-header">
+      <div>
+        <div class="panel-title">Schedules</div>
+        <div class="panel-subtitle">Recently created</div>
+      </div>
+      <a class="btn-print" href="create.html">New schedule</a>
+    </div>
+
+    <div id="scheduleList" class="schedule-list"></div>
+
+    <div class="empty-state list-empty" id="listEmpty">
+      <div class="empty-graphic">
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <div class="empty-title">No schedules yet</div>
+      <div class="empty-desc">Create your first plan to see it here.</div>
+    </div>
+  </aside>
+
+  <section class="calendar-panel" id="scheduleView">
+    <div class="panel-header">
+      <div>
+        <div class="panel-title" id="panelTitle">Schedule</div>
+        <div class="panel-subtitle" id="panelSubtitle">Select a schedule from the list</div>
+      </div>
+      <div class="panel-actions">
+        
+        <button class="btn-print" onclick="window.print()" style="display:none" id="printBtn">Print</button>
+      </div>
+    </div>
+
+    <div class="empty-state" id="emptyState">
+      <div class="empty-graphic">
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <div class="empty-title">Select a schedule</div>
+      <div class="empty-desc">Click a schedule above to view the full plan.</div>
+    </div>
+
+    <div id="calendarOutput" style="display:none"></div>
+    <div class="all-done-wrap" id="allDoneWrap" style="display:none">
+      <button class="btn-generate btn-submit all-done-btn" id="allDoneBtn" type="button">All Done</button>
+    </div>
+  </section>
+</main>
+
+<script src="js/utils.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/pages.js"></script>
+<script src="js/calendar.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/schedule-view.js"></script>
+<script src="js/taglines.js"></script>
+<script src="js/debug.js"></script>
+</body>
+</html>

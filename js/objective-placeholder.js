@@ -11,7 +11,26 @@ document.addEventListener('DOMContentLoaded', () => {
     'e.g. Master Algebra 1 fundamentals...',
     'e.g. Launch a small online business...',
     'e.g. Improve speaking confidence for interviews...',
-    'e.g. Create my own website...'
+    'e.g. Create my own website...',
+    'e.g. Study for AP Biology unit tests...',
+    'e.g. Write a scholarship essay draft...',
+    'e.g. Build a mobile app...',
+    'e.g. Learn guitar chords and strumming...',
+    'e.g. Prepare for a product management interview...',
+    'e.g. Train for a 5K in 8 weeks...',
+    'e.g. Learn how to use Excel...',
+    'e.g. Finish a short story draft...',
+    'e.g. Practice public speaking for a presentation...',
+    'e.g. Learn basic Photoshop editing...',
+    'e.g. Study for my math test...',
+    'e.g. Create a YouTube plan...',
+    'e.g. Organize a study schedule...',
+    'e.g. Improve my typing speed to atleast 80 wpm...',
+    'e.g. Build a habit tracker app...',
+    'e.g. Learn React fundamentals...',
+    'e.g. Plan a personal finance budget...',
+    'e.g. Prepare for a driving test...',
+    'e.g. Learn SQL basics...'
   ];
 
   const ROTATE_DELAY = 5000;

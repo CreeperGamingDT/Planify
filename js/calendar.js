@@ -122,7 +122,7 @@ function renderCalendar(data, startDate, endDate, days, totalMinutes, scheduleId
 }
 
 function openTaskView(scheduleId, taskId) {
-  const target = `task.html?scheduleId=${encodeURIComponent(scheduleId)}&taskId=${encodeURIComponent(taskId)}`;
+  const target = `${window.PAGES.taskGuide}?scheduleId=${encodeURIComponent(scheduleId)}&taskId=${encodeURIComponent(taskId)}`;
   window.location.href = target;
 }
 
